@@ -1,10 +1,12 @@
 module CashParadox
+export load_data, eqn_LWfit
 using MAT
 
 """
-   load_data(irflag,flag,)
+   load_data(irflag,flag)
 
-Load data depending on the figure and country wanted
+Load data depending on the figure and country wanted.
+
 """
 function load_data(irflag::Int64,flag::Int64)
     dict=matread("JiangShaoCodeData\\data.mat")
@@ -142,6 +144,7 @@ end
    eqn_LWfit(x)
 
 Matching the time series of CIC_GDP ratio in the data with the simulated series in the Lagos-Wright model. 
+
 """
 function eqn_LWfit(x::Vector{Float64})
 η=x[1]
