@@ -1,11 +1,11 @@
 module CashParadox
 using MAT
+
 """
    load_data(fig,irflag,flag,)
 
 Load data depending on the figure and country wanted
 """
-
 function load_data(irflag::Int64,flag::Int64)
     dict=matread("JiangShaoCodeData\\data.mat")
     dictir=matread("JiangShaoCodeData\\ir.mat")
@@ -150,6 +150,7 @@ Xstar=x[3]
 α=η
 n=length(year)
 end
+
 """
     domath(x::Number)
 
