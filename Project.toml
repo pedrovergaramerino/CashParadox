@@ -1,0 +1,7 @@
+name = "CashParadox"
+uuid = "b571ab69-f241-4823-937c-9abbf6f3d080"
+authors = ["Pedro Vergara Merino <pedro.vergaramerino@sciencespo.fr>"]
+version = "0.1.0"
+
+[deps]
+DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
