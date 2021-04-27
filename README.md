@@ -1,0 +1,2 @@
+# CashParadox.jl
+Replication Paper
