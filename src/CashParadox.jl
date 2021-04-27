@@ -2,7 +2,7 @@ module CashParadox
 using MAT
 
 """
-   load_data(fig,irflag,flag,)
+   load_data(irflag,flag,)
 
 Load data depending on the figure and country wanted
 """
@@ -149,13 +149,4 @@ s=x[2]
 Xstar=x[3]
 α=η
 n=length(year)
-end
-
-"""
-    domath(x::Number)
-
-Return `x + 5`.
-"""
-domath(x::Number) = x + 5
-
 end
