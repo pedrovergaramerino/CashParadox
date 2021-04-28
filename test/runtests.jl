@@ -1,4 +1,3 @@
 using Test, CashParadox
 
-@test hello("Julia") == "Hello, Julia"
-@test domath(2.0) ≈ 7.0
+@test load_data(1,0)[ddata]==[0,0.49,0.782,0.822,0.856]'
