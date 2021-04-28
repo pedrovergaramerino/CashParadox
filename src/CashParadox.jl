@@ -1,6 +1,9 @@
 module CashParadox
-export load_data, eqn_LWfit
+export load_data, fig5, eqn_LWfit
 using MAT
+using Statistics
+using LinRegOutliers
+using Plots
 
 """
    load_data(irflag,flag)
@@ -8,6 +11,13 @@ using MAT
 Load data depending on the figure and country wanted.
 
 """
+mutable struct load_data
+    year::Vector{Float64}
+    ir::Vector{Float64}
+    yt::Vector{Int64}
+    ρ::Vector{Float64}
+    ddata::Vector{Float64}
+
 function load_data(irflag::Int64,flag::Int64)
     dict=matread("JiangShaoCodeData\\data.mat")
     dictir=matread("JiangShaoCodeData\\ir.mat")
@@ -23,27 +33,27 @@ function load_data(irflag::Int64,flag::Int64)
         if flag==0 #CANADA
             year=can[:,1]
             ir=can[:,2]
-            ddata=[0,0.49,0.782,0.822,0.856]' #Data on access to credit
-            yt=[1960,1980,1999,2005,2012]'
+            ddata=[0 0.49 0.782 0.822 0.856]' #Data on access to credit
+            yt=[1960 1980 1999 2005 2012]'
             ρ=can[:,3]
         elseif flag==1 #USA
             year=usa[:,1]
             ir=usa[:,2]
-            ddata=[0,16.3,38.3,43.0,55.8,62.2,66.5,68,72.6,71.5]'/100
-            yt=[1960,1970,1977,1983,1989,1992,1995,1998,2001,2004]'
+            ddata=[0 16.3 38.3 43.0 55.8 62.2 66.5 68 72.6 71.5]'/100
+            yt=[1960 1970 1977 1983 1989 1992 1995 1998 2001 2004]'
             ρ=usa[:,3]
         elseif flag==2 #AUSTRALIA
             year=aus[:,1]
             ir=aus[:,2]
-            ddata=[0,0.520354595,0.537666422,0.57032816,0.594028535,0.622316221,0.65072652,0.687205136,0.694317256,0.73605656,0.760156768,0.792611398,0.841961623,0.878037024,0.905946326,0.90592637,0.897747613,0.904361411,0.90064194]'
+            ddata=[0 0.520354595 0.537666422 0.57032816 0.594028535 0.622316221 0.65072652 0.687205136 0.694317256 0.73605656 0.760156768 0.792611398 0.841961623 0.878037024 0.905946326 0.90592637 0.897747613 0.904361411 0.90064194]'
             yt= vcat([1965], collect(1994:2011))
             ρ=aus[:,3]
         else #UK 
             uk=uk[5:end,:]
             year=uk[:,1]
             ir=uk[:,2]
-            ddata=[0,0.5,0.53,0.65,0.62,0.64,0.62,0.61, 0.6]'
-            yt=[1965,1999, 2000, 2005, 2009, 2010, 2011, 2012, 2013]'
+            ddata=[0 0.5 0.53 0.65 0.62 0.64 0.62 0.61  0.6]'
+            yt=[1965 1999  2000  2005  2009  2010  2011  2012  2013]'
             ρ=uk[:,3]
         end
     else
@@ -87,8 +97,8 @@ function load_data(irflag::Int64,flag::Int64)
             year=yr0[idx]
             ir=ir0[idx]*100
             ρ=ρ0[idx]
-            ddata=[0,16.3,38.3,43.0,55.8,62.2,66.5,68,72.6,71.5]'/100
-            yt=[1960,1970,1977,1983,1989,1992,1995,1998,2001,2004]'
+            ddata=[0 16.3 38.3 43.0 55.8 62.2 66.5 68 72.6 71.5]'/100
+            yt=[1960 1970 1977 1983 1989 1992 1995 1998 2001 2004]'
         elseif flag==2 #AUSTRALIA
             yr0=ir_aus[:,1]
             if irflag==2
@@ -108,7 +118,7 @@ function load_data(irflag::Int64,flag::Int64)
             year=yr0[idx]
             ir=ir0[idx]*100
             ρ=ρ0[idx] 
-            ddata=[0,0.520354595,0.537666422,0.57032816,0.594028535,0.622316221,0.65072652,0.687205136,0.694317256,0.73605656,0.760156768,0.792611398,0.841961623,0.878037024,0.905946326,0.90592637,0.897747613,0.904361411,0.90064194]';
+            ddata=[0 0.520354595 0.537666422 0.57032816 0.594028535 0.622316221 0.65072652 0.687205136 0.694317256 0.73605656 0.760156768 0.792611398 0.841961623 0.878037024 0.905946326 0.90592637 0.897747613 0.904361411 0.90064194]'
             yt=vcat([1965], collect(1994:2011))  
         else #UK
             yr0=ir_uk[:,1]
@@ -131,15 +141,48 @@ function load_data(irflag::Int64,flag::Int64)
             year=year[5:end]
             ir=ir[5:end]
             ρ=ρ[5:end]
-            ddata=[0,0.5,0.53,0.65,0.62,0.64,0.62,0.61, 0.6]'
-            yt=[1965,1999, 2000, 2005, 2009, 2010, 2011, 2012, 2013]'
+            ddata=[0 0.5 0.53 0.65 0.62 0.64 0.62 0.61  0.6]'
+            yt=[1965 1999  2000  2005  2009  2010  2011  2012  2013]'
         end
     end
-    data=Dict(:year => year, :ir => ir, :ρ => ρ, :ddata => ddata, :yt=> yt)
-    return data
+    ddata=Vector{Float64}(vec(ddata))
+    yt=Vector{Int64}(vec(yt))
+    this=new()
+    this.year=year
+    this.ir=ir
+    this.ρ=ρ
+    this.ddata=ddata
+    this.yt=yt
+    return this
+end
 end
 
+"""
+   fig5(irflag,flag)
 
+Replicates figure 5 for a specific country
+
+"""
+function fig5(irflag::Int64,flag::Int64)
+    data=load_data(irflag,flag)
+    normyt=(data.yt.- mean(data.yt))./std(data.yt)
+    normyear=(data.year.- mean(data.yt))./std(data.yt)
+    Xyt=[ones(length(normyt)) normyt normyt.^2]
+    Xyear=[ones(length(normyear)) normyear normyear.^2]
+    dt=lad(Xyt,data.ddata;starting_betas=nothing)
+    vdelta=Xyear*dt["betas"]
+    n=length(year)
+    vq2=zeros(n,1)
+    vz2=vq2
+    vz=vz2
+    vzB=vq2
+    vregime=vq2
+    vGDP=vq2
+    vrho=vq2
+    vtheta=vq2
+    vzT=vq2
+return vdelta
+end
 """
    eqn_LWfit(x)
 
