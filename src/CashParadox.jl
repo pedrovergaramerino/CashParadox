@@ -6,20 +6,7 @@ using LinRegOutliers
 using Plots
 using Roots
 using Optim
-
-"""
-    xopt, fopt, converged = fmincon(obj, startval)
-Minimize the function obj, starting at startval.
-fminunc() with no arguments will run an example, execute edit(fminunc,()) to see the code.
-fminunc() uses NLopt.jl to do the actual minimization.
-"""
-function fmincon(obj, startval, lb=[], ub=[])
-    Optim.optimize(obj,lb,ub,x0,Fminbox())
-    opt=[opt.minimizer,opt.minimum]
-    return x
-end
-
-
+using DataFrames
 
 """
    load_data(irflag,flag)
@@ -1101,5 +1088,279 @@ function figD1(x)
 
     return p
 end
+
+
+"""
+Calibrate(irflag,flag,model)
+
+Gives the value for parameters given a interest rate source, a country, and a model
+
+"""
+
+function Calibrate(irflag::Int64, flag::Int64, model::Int64)
+    opt=[[0.0,0.0,0.0],0.0]
+    if model==1
+        if flag==3
+            x0=[0.9 2.0 10.0]; #[eta s Xstar] initial guess
+            x0=Vector{Float64}(vec(x0))
+        
+        elseif (flag==1 && irflag==3)
+            x0=[0.9,1.1,3.0]
+        else
+            x0=[0.9,1.5,5.0];
+            x0=Vector{Float64}(vec(x0))
+        end
+        lb=[0.0,1.01,0.0];
+        ub=[0.999999,Inf,Inf];
+        R=[]
+        r=[]
+        data=load_data(irflag,flag)
+        n=length(data.year)
+        vq2=zeros(n,1);
+        vy=zeros(n,1);
+        vz2=zeros(n,1);
+        vz=zeros(n,1);
+        vzB=zeros(n,1);
+        vregime=zeros(n,1);
+        vGDP=zeros(n,1);
+        vzT=zeros(n,1)
+        vρ=zeros(n,1)
+        vθ=zeros(n,1)
+        ystar=1.0
+        vδprime=vδ(irflag,flag)
+        opt=Optim.optimize(x-> eqn_tfit(x,irflag,flag),lb,ub,x0,Fminbox())
+        x=opt.minimizer
+        ess=opt.minimum
+        η=x[1]; 
+        s=x[2]; 
+        Xstar=x[3]; 
+        α=η;
+        qstar=s^(1/α)
+        rmsd=sqrt(ess/n);    #root of mean squared error
+        rmsd=rmsd/mean(data.ρ);  # normalized RMSE
+        for j=1:length(data.year)
+            i=data.ir[j]/100;
+            qi=(s/(1+i))^(1/α);
+            yi=(1+i)^(-1/η);
+            δ=vδprime[j];
+            if δ>1
+                vδprime[j]=1;
+                δ=1;
+            end
+            δ12=1-ystar/qi; # Cutoff of Regimes 1 and 2
+            δ23=1-yi*(1+i)/qstar; # Cutoff of Regimes 2 and 3
+            
+            if δ12<0
+                NoRegime1=1;
+            end
+            if δ<=δ12   # Regime 1
+                vq2[j]=qi;
+                vy[j]=ystar;
+                vz2[j]=qi;
+                vzB[j]=0;
+                vregime[j]=1;
+            elseif δ>=δ23   # Regime 3
+                vq2[j]=qstar;
+                vy[j]=yi;
+                vz2[j]=qstar/(1+i);
+                vzB[j]=yi-(1-δ)*qstar/(1+i);
+                vregime[j]=3;
+            else                # Regime 2
+                x0=ystar;
+                eqn_Regime2(x)=eqn_Regime201610(x,α,δ,η,s,i)
+                y = find_zero(eqn_Regime2,x0);
+                u_y=y^(-η);
+                q2=y*u_y/(1-δ);
+                v_q=s*q2^(-α)
+                vq2[j]=q2;
+                vy[j]=y;
+                vz2[j]=y/(1-δ);
+                vzB[j]=0;
+                vregime[j]=2;
+            end
+        end
+        
+        vzA=(1.0 .-vδprime).*vz2;
+        vz=vzA .+ vzB;
+        vzT=(1.0 .-vδprime).*vz2 .+vy;
+        vGDP=((1.0 .-vδprime).*vq2.+vδprime .*qstar)./(vy.^(-η)) .+vy .+3 .*Xstar; # count CM
+        
+        vvelocity=vzT./vz;
+        vθ=vzT./(vGDP .-3 .*Xstar);
+        vρ=vz./vGDP;
+        year2005=findall(x->x==2005,data.year)[1]
+        year2014=findall(x->x==2014,data.year)[1]
+        year1990=findall(x->x==1990,data.year)[1]
+        θ=mean(vθ[year2005:year2014])
+        cor_ρ=cor(vρ,data.ρ)[1]
+        cor_θbef=cor(vρ[1:year1990-1],vθ[1:year1990-1])
+        cor_θaft=cor(vρ[year1990:end],vθ[year1990:end])
+
+
+
+        return (α,s,Xstar,rmsd,cor_ρ,cor_θbef,cor_θaft,qstar,θ)
+    
+    elseif model==0
+        if flag==2
+            x0=[0.5 1.0 15.0]; #[eta s Xstar] initial guess
+            x0=Vector{Float64}(vec(x0))
+        else
+            x0=[0.9,1.0,10.0];
+            x0=Vector{Float64}(vec(x0))
+        end
+        lb=[0.0,0.9999999,0.0];
+        ub=[0.999999,1.000001,Inf];
+        R=[]
+        r=[]
+        data=load_data(irflag,flag)
+        n=length(data.year)
+        vz=zeros(n,1);
+        vGDP=zeros(n,1);
+        vzT=zeros(n,1)
+        vregime=zeros(n,1)
+        vρ=zeros(n,1)
+        vθ=zeros(n,1)
+        ystar=1.0
+        vδprime=vδ(irflag,flag)
+        opt=Optim.optimize(x-> eqn_LWfit(x,irflag,flag),lb,ub,x0,Fminbox())
+        x=opt.minimizer
+        ess=opt.minimum
+        η=x[1]; 
+        s=x[2]; 
+        Xstar=x[3]; 
+        α=η;
+        qstar=s^(1/α)
+        rmsd=sqrt(ess/n);    #root of mean squared error
+        rmsd=rmsd/mean(data.ρ);
+        for j=1:length(data.year)
+            i=data.ir[j]/100;
+            qi=(s./(1+i))^(1.0./α);
+            qstar=s^(1.0./α);
+            if vδprime[j]>1
+                vδprime[j]=1;
+            end
+            vz[j]=(1.0.-vδprime[j]).*qi;
+            vGDP[j]=(1.0.-vδprime[j])*qi.+vδprime[j].*qstar.+2.0.*Xstar;
+        end
+        vzT=vz;
+        ω=0.0;
+        vθ=vzT./(vGDP.-(1.0.-ω).*2.0.*Xstar);
+        vρ=vz./vGDP; 
+        year2005=findall(x->x==2005,data.year)[1]
+        year2014=findall(x->x==2014,data.year)[1]
+        year1990=findall(x->x==1990,data.year)[1]
+        θ=mean(vθ[year2005:year2014])
+        cor_ρ=cor(vρ,data.ρ)[1]
+        cor_θbef=cor(vρ[1:year1990-1],vθ[1:year1990-1])
+        cor_θaft=cor(vρ[year1990:end],vθ[year1990:end])
+
+        return (α,s,Xstar,rmsd,cor_ρ,cor_θbef,cor_θaft,qstar,θ)    
+
+    elseif model==4
+        if flag==3
+            x0=[0.5 1.5 100.0]; #[eta s Xstar] initial guess
+            x0=Vector{Float64}(vec(x0))
+        else
+            x0=[0.8,2.0,100.0];
+            x0=Vector{Float64}(vec(x0))
+        end
+        lb=[0.001,0.001,0.0];
+        ub=[1.0,Inf,Inf]
+        R=[]
+        r=[]
+        data=load_data(irflag,flag)
+        n=length(data.year)
+        vz=zeros(n,1);
+        vregime=zeros(n,1)
+        vGDP=zeros(n,1);
+        vzT=zeros(n,1)
+        vρ=zeros(n,1)
+        vθ=zeros(n,1)
+        yi3=zeros(n,1)
+        qi3=zeros(n,1)
+        ystar=1.0
+        vδprime=vδ(irflag,flag)
+        opt=Optim.optimize(x-> eqn_noconnfit(x,irflag,flag),lb,ub,x0,Fminbox())
+        x=opt.minimizer
+        ess=opt.minimum
+        η=x[1]; 
+        s=x[2]; 
+        Xstar=x[3]; 
+        α=η;
+        qstar=s^(1/α)
+        rmsd=sqrt(ess/n);    #root of mean squared error
+        rmsd=rmsd/mean(data.ρ);
+        for j=1:length(data.year)
+            i=data.ir[j]./100.0;
+            qi=(s./(1.0.+i)).^(1.0./α);
+            yi=(1.0.+i).^(-1.0./η);
+            yi3[j]=yi;
+            qi3[j]=qi;
+            if vδprime[j]>1
+               vδprime[j]=1;
+            end
+            vz[j]=(1.0.-vδprime[j]).*qi.+yi;
+            vGDP[j]=vz[j].+vδprime[j].*qstar.+4.0.*Xstar;
+        end
+        vzT=vz;
+        ω=0.0;
+        vθ=vzT./(vGDP.-(1.0.-ω).*4.0.*Xstar);
+        vρ=vz./vGDP;
+        year2005=findall(x->x==2005,data.year)[1]
+        year2014=findall(x->x==2014,data.year)[1]
+        year1990=findall(x->x==1990,data.year)[1]
+        θ=mean(vθ[year2005:year2014])
+        cor_ρ=cor(vρ,data.ρ)[1]
+        cor_θbef=cor(vρ[1:year1990-1],vθ[1:year1990-1])
+        cor_θaft=cor(vρ[year1990:end],vθ[year1990:end])
+
+        return (α,s,Xstar,rmsd,cor_ρ,cor_θbef,cor_θaft,qstar,θ)
+    end  
+end
+
+"""
+Table1(x)
+
+Store all results from Table 1 in a DataFrame
+
+"""
+
+function Table1(x)
+  df=DataFrame()
+  df.Country=["Canada","Canada","Canada","US","US","US","Australia","Australia","Australia","UK","UK","UK"]
+  df.Model=["Standard", "NCF", "Full","Standard", "NCF", "Full","Standard", "NCF", "Full","Standard", "NCF", "Full"]
+  α=zeros(12)
+  s=zeros(12)
+  Xstar=zeros(12)
+  rmsd=zeros(12)
+  cor_rho=zeros(12)
+  cor_theta1=zeros(12)
+  cor_theta2=zeros(12)
+  qstar=zeros(12)
+  θ=zeros(12)
+    for mp in 1:3
+        if mp==1
+            model=0
+        elseif mp==2
+            model=4
+        else
+            model=1
+        end
+        for country in 0:3
+            (α[country*3+mp],s[country*3+mp],Xstar[country*3+mp],rmsd[country*3+mp],cor_rho[country*3+mp],cor_theta1[country*3+mp],cor_theta2[country*3+mp],qstar[country*3+mp],θ[country*3+mp])=Calibrate(1,country,model)
+        end 
+    end
+    df.α=α
+    df.s=s
+    df.xstar=Xstar
+    df.NRMSE=rmsd
+    df.cor_ρ=cor_rho
+    df.cor_ρθ_before_1990=cor_theta1
+    df.cor_ρθ_after_1990=cor_theta2
+    df.Implied_qstar=qstar
+    df.θ=θ
+    return df
+end
+
 
 end #module
