@@ -842,8 +842,264 @@ function figA5(x)
 end
 
 """
-figA5(x)
+figD1(x)
 
-Creates figure A5
+Creates figure D1
 
 """
+function figD1(x)
+    dictir=matread("JiangShaoCodeData//ir.mat")
+    usa=dictir["ir_usa"]
+    yearusa=usa[:,1]
+    ir1usa=usa[:,2]
+    idx1=Vector{Bool}(undef,length(ir1usa))
+    for i in 1:length(ir1usa)
+        if (isnan(ir1usa[i]))
+            idx1[i]=0
+        else
+            idx1[i]=1
+        end
+    end
+    ir1usa=ir1usa[idx1]
+    y1usa=yearusa[idx1]
+
+    ir2usa=usa[:,3]
+    idx2=Vector{Bool}(undef,length(ir2usa))
+    for i in 1:length(ir2usa)
+        if (isnan(ir2usa[i]))
+            idx2[i]=0
+        else
+            idx2[i]=1
+        end
+    end
+    ir2usa=ir2usa[idx2].*100
+    y2usa=yearusa[idx2]
+
+    ir3usa=usa[:,4].*100
+    idx3=Vector{Bool}(undef,length(ir3usa))
+    for i in 1:length(ir3usa)
+        if (isnan(ir3usa[i]))
+            idx3[i]=0
+        else
+            idx3[i]=1
+        end
+    end
+    ir3usa=ir3usa[idx3]
+    y3usa=yearusa[idx3]
+
+    ir4usa=usa[:,5].*100
+    idx4=Vector{Bool}(undef,length(ir4usa))
+    for i in 1:length(ir4usa)
+        if (isnan(ir4usa[i]))
+            idx4[i]=0
+        else
+            idx4[i]=1
+        end
+    end
+    ir4usa=ir4usa[idx4]
+    y4usa=yearusa[idx4]
+
+    ir5usa=usa[:,6].*100
+    idx5=Vector{Bool}(undef,length(ir5usa))
+    for i in 1:length(ir5usa)
+        if (isnan(ir5usa[i]))
+            idx5[i]=0
+        else
+            idx5[i]=1
+        end
+    end
+    ir5usa=ir5usa[idx5]
+    y5usa=yearusa[idx5]
+
+    p1= plot(y1usa,ir1usa,color=:black, ylabel="Percentage",xlabel="year",title="Implied N. Interest Rate: US", label="Safe Bond")
+    plot!(p1,y2usa,ir2usa,color=:red, style=:dashdot, label="DLM of Actual Inflation")
+    plot!(p1,y3usa,ir3usa,color=:blue, style=:dot, label="Term Structure Based")
+    plot!(p1,y4usa,ir4usa,color=:green, style=:dash, label="OECD Forecast")
+    plot!(p1,y5usa,ir5usa,color=:lightskyblue, style=:dashdotdot, label="Survey Based")
+
+    aus=dictir["ir_aus"]
+    yearaus=aus[:,1]
+    ir1aus=aus[:,2]
+    idx1=Vector{Bool}(undef,length(ir1aus))
+    for i in 1:length(ir1aus)
+        if (isnan(ir1aus[i]))
+            idx1[i]=0
+        else
+            idx1[i]=1
+        end
+    end
+    ir1aus=ir1aus[idx1]
+    y1aus=yearaus[idx1]
+
+    ir2aus=aus[:,3]
+    idx2=Vector{Bool}(undef,length(ir2aus))
+    for i in 1:length(ir2aus)
+        if (isnan(ir2aus[i]))
+            idx2[i]=0
+        else
+            idx2[i]=1
+        end
+    end
+    ir2aus=ir2aus[idx2].*100
+    y2aus=yearaus[idx2]
+
+    ir3aus=aus[:,4].*100
+    idx3=Vector{Bool}(undef,length(ir3aus))
+    for i in 1:length(ir3aus)
+        if (isnan(ir3aus[i]))
+            idx3[i]=0
+        else
+            idx3[i]=1
+        end
+    end
+    ir3aus=ir3aus[idx3]
+    y3aus=yearaus[idx3]
+
+    ir4aus=aus[:,5].*100
+    idx4=Vector{Bool}(undef,length(ir4aus))
+    for i in 1:length(ir4aus)
+        if (isnan(ir4aus[i]))
+            idx4[i]=0
+        else
+            idx4[i]=1
+        end
+    end
+    ir4aus=ir4aus[idx4]
+    y4aus=yearaus[idx4]
+
+    ir5aus=aus[:,6].*100
+    idx5=Vector{Bool}(undef,length(ir5aus))
+    for i in 1:length(ir5aus)
+        if (isnan(ir5aus[i]))
+            idx5[i]=0
+        else
+            idx5[i]=1
+        end
+    end
+    ir5aus=ir5aus[idx5]
+    y5aus=yearaus[idx5]
+
+    p2= plot(y1aus,ir1aus,color=:black, ylabel="Percentage",xlabel="year",title="Implied N. Interest Rate: Australia", legend=false)
+    plot!(p2,y2aus,ir2aus,color=:red, style=:dashdot)
+    plot!(p2,y3aus,ir3aus,color=:blue, style=:dot)
+    plot!(p2,y4aus,ir4aus,color=:green, style=:dash)
+    plot!(p2,y5aus,ir5aus,color=:lightskyblue, style=:dashdotdot)
+
+    can=dictir["ir_can"]
+    yearcan=can[:,1]
+    ir1can=can[:,2]
+    idx1=Vector{Bool}(undef,length(ir1can))
+    for i in 1:length(ir1can)
+        if (isnan(ir1can[i]))
+            idx1[i]=0
+        else
+            idx1[i]=1
+        end
+    end
+    ir1can=ir1can[idx1]
+    y1can=yearcan[idx1]
+
+    ir2can=can[:,3]
+    idx2=Vector{Bool}(undef,length(ir2can))
+    for i in 1:length(ir2can)
+        if (isnan(ir2can[i]))
+            idx2[i]=0
+        else
+            idx2[i]=1
+        end
+    end
+    ir2can=ir2can[idx2].*100
+    y2can=yearcan[idx2]
+
+    ir3can=can[:,4].*100
+    idx3=Vector{Bool}(undef,length(ir3can))
+    for i in 1:length(ir3can)
+        if (isnan(ir3can[i]))
+            idx3[i]=0
+        else
+            idx3[i]=1
+        end
+    end
+    ir3can=ir3can[idx3]
+    y3can=yearcan[idx3]
+
+    ir4can=can[:,5].*100
+    idx4=Vector{Bool}(undef,length(ir4can))
+    for i in 1:length(ir4can)
+        if (isnan(ir4can[i]))
+            idx4[i]=0
+        else
+            idx4[i]=1
+        end
+    end
+    ir4can=ir4can[idx4]
+    y4can=yearcan[idx4]
+
+
+    p3= plot(y1can,ir1can,color=:black, ylabel="Percentage",xlabel="year",title="Implied N. Interest Rate: Canada", legend=false)
+    plot!(p3,y2can,ir2can,color=:red, style=:dashdot)
+    plot!(p3,y3can,ir3can,color=:blue, style=:dot)
+    plot!(p3,y4can,ir4can,color=:green, style=:dash)
+
+    uk=dictir["ir_uk"]
+    yearuk=uk[:,1]
+    ir1uk=uk[:,2]
+    idx1=Vector{Bool}(undef,length(ir1uk))
+    for i in 1:length(ir1uk)
+        if (isnan(ir1uk[i]))
+            idx1[i]=0
+        else
+            idx1[i]=1
+        end
+    end
+    ir1uk=ir1uk[idx1]
+    y1uk=yearuk[idx1]
+
+    ir2uk=uk[:,3]
+    idx2=Vector{Bool}(undef,length(ir2uk))
+    for i in 1:length(ir2uk)
+        if (isnan(ir2uk[i]))
+            idx2[i]=0
+        else
+            idx2[i]=1
+        end
+    end
+    ir2uk=ir2uk[idx2].*100
+    y2uk=yearuk[idx2]
+
+    ir3uk=uk[:,4].*100
+    idx3=Vector{Bool}(undef,length(ir3uk))
+    for i in 1:length(ir3uk)
+        if (isnan(ir3uk[i]))
+            idx3[i]=0
+        else
+            idx3[i]=1
+        end
+    end
+    ir3uk=ir3uk[idx3]
+    y3uk=yearuk[idx3]
+
+    ir4uk=uk[:,5].*100
+    idx4=Vector{Bool}(undef,length(ir4uk))
+    for i in 1:length(ir4uk)
+        if (isnan(ir4uk[i]))
+            idx4[i]=0
+        else
+            idx4[i]=1
+        end
+    end
+    ir4uk=ir4uk[idx4]
+    y4uk=yearuk[idx4]
+
+
+    p4= plot(y1uk,ir1uk,color=:black, ylabel="Percentage",xlabel="year",title="Implied N. Interest Rate: UK", legend=false)
+    plot!(p4,y2uk,ir2uk,color=:red, style=:dashdot)
+    plot!(p4,y3uk,ir3uk,color=:blue, style=:dot)
+    plot!(p4,y4uk,ir4uk,color=:green, style=:dash)
+
+    p=plot(p1,p2,p3,p4,layout=(2,2),size=(1000,1000))
+
+    return p
+end
+
+end #module
