@@ -7,6 +7,20 @@ In this replication study, we do ...
 ```@autodocs
 Modules = [CashParadox]
 ```
+
+**Replication of model predictions Figures 5a-5d**
+
+**Figure 5a: AUSTRALIA**
 ![fig5aus](./assets/fig5aus.png)
+
+**Figure 5b: CANADA**
+![fig5can](./assets/fig5can.png)
+
+**Figure 5c:  UK**
+![fig5uk](./assets/fig5uk.png)
+
+**Figure 5d: US**
+![fig5us](./assets/fig5us.png)
+
 
 end
