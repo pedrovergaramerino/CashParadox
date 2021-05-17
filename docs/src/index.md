@@ -7,6 +7,6 @@ In this replication study, we do ...
 ```@autodocs
 Modules = [CashParadox]
 ```
-
+![fig5aus](./assets/fig5aus.png)
 
 end

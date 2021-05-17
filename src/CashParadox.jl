@@ -613,7 +613,6 @@ fig5(flag)
 Creates figure 5 for a specific country
 
 """
-
 function fig5(flag::Int64)
 p1=figsub5(1,flag,0)
 p2=figsub5(1,flag,4)
@@ -669,7 +668,6 @@ figA2(flag)
 Creates figure 5 for a specific country
 
 """
-
 function figA2(flag::Int64)
     p1=figsubA2(1,flag,0)
     p2=figsubA2(1,flag,4)
@@ -679,12 +677,11 @@ function figA2(flag::Int64)
 end
 
 """
-figA3(flag)
+figsubA3(flag)
 
 Creates figure A3 for a specific country
 
 """
-
 function figsubA3(flag::Int64)
     if flag==0
         title="Canada"
@@ -785,7 +782,6 @@ figA4(x)
 Creates figure A4
 
 """
-
 function figA4(x)
     dict=matread("JiangShaoCodeData//atm_cic.mat")
     can=dict["ca_atm"]
@@ -1096,7 +1092,6 @@ Calibrate(irflag,flag,model)
 Gives the value for parameters given a interest rate source, a country, and a model
 
 """
-
 function Calibrate(irflag::Int64, flag::Int64, model::Int64)
     opt=[[0.0,0.0,0.0],0.0]
     if model==1
@@ -1324,7 +1319,6 @@ Table1(x)
 Store all results from Table 1 in a DataFrame
 
 """
-
 function Table1(x)
   df=DataFrame()
   df.Country=["Canada","Canada","Canada","US","US","US","Australia","Australia","Australia","UK","UK","UK"]
