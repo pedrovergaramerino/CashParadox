@@ -21,8 +21,8 @@ mutable struct load_data
     ddata::Vector{Float64}
 
     function load_data(irflag::Int64,flag::Int64)
-        datamat= joinpath(@__DIR__,"..","data","data.mat")
-        datair= joinpath(@__DIR__,"..","data","ir.mat")
+        datamat= joinpath(@__DIR__,"data","data.mat")
+        datair= joinpath(@__DIR__,"data","ir.mat")
         dict=matread(datamat)
         dictir=matread(datair)
         can=dict["can"]
