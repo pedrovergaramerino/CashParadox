@@ -21,8 +21,8 @@ mutable struct load_data
     ddata::Vector{Float64}
 
     function load_data(irflag::Int64,flag::Int64)
-        datamat= joinpath(@__DIR__,"data","data.mat")
-        datair= joinpath(@__DIR__,"data","ir.mat")
+        datamat= joinpath(@__DIR__,"..","data","data.mat")
+        datair= joinpath(@__DIR__,"..","data","ir.mat")
         dict=matread(datamat)
         dictir=matread(datair)
         can=dict["can"]
@@ -834,7 +834,7 @@ Creates figure D1
 
 """
 function figD1(x)
-    datair= joinpath(@__DIR__,"data","ir.mat")
+    datair= joinpath(@__DIR__,"..","data","ir.mat")
     dictir=matread(datair)
     usa=dictir["ir_usa"]
     yearusa=usa[:,1]
