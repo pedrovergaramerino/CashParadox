@@ -6,7 +6,9 @@ using Plots
 using Roots
 using Optim
 using DataFrames
-
+include("atm_cic.mat")
+include("data.mat")
+include("ir.mat")
 """
    load_data(irflag,flag)
 
@@ -21,8 +23,8 @@ mutable struct load_data
     ddata::Vector{Float64}
 
 function load_data(irflag::Int64,flag::Int64)
-    dict=matread("JiangShaoCodeData//data.mat")
-    dictir=matread("JiangShaoCodeData//ir.mat")
+    dict=matread("data.mat")
+    dictir=matread("ir.mat")
     can=dict["can"]
     uk=dict["uk"]
     usa=dict["usa"]
@@ -814,7 +816,7 @@ Creates figure A5
 """
 
 function figA5(x)
-    dict=matread("JiangShaoCodeData//atm_cic.mat")
+    dict=matread("atm_cic.mat")
     cr=dict["cr"]
     yr=cr[:,1]
     crc=cr[:,2]
@@ -1252,7 +1254,7 @@ function Calibrate(irflag::Int64, flag::Int64, model::Int64)
 
     elseif model==4
         if flag==3
-            x0=[0.5 1.5 100.0]; #[eta s Xstar] initial guess
+            x0=[0.5 1.5 80.0]; #[eta s Xstar] initial guess
             x0=Vector{Float64}(vec(x0))
         else
             x0=[0.8,2.0,100.0];
@@ -1260,8 +1262,6 @@ function Calibrate(irflag::Int64, flag::Int64, model::Int64)
         end
         lb=[0.001,0.001,0.0];
         ub=[1.0,Inf,Inf]
-        R=[]
-        r=[]
         data=load_data(irflag,flag)
         n=length(data.year)
         vz=zeros(n,1);
