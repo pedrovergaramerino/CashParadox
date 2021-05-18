@@ -10,7 +10,7 @@ using DataFrames
 """
    load_data(irflag,flag)
 
-Load data depending on the figure and country wanted.
+Creates a struct with the data for a given country and interest rate specification.
 
 """
 mutable struct load_data
@@ -166,7 +166,7 @@ end
 """
    vδ(irflag,flag)
 
-Computes vδ
+Computes vδ given a country and interest rate specification.
 
 """
 function vδ(irflag::Int64,flag::Int64)
@@ -183,8 +183,8 @@ end
 """
 eqn_Regime201610
 
-Extensive margin
-Equations to solve q2 and y in regime 2
+Extensive margin:
+This equation is necessary to solve for q2 and y in regime 2.
 
 """
 function eqn_Regime201610(x,α,δ,η,s,i)
@@ -286,7 +286,7 @@ end
 eqn_LWfit
 
 Matching the time series of CIC_GDP ratio in the data with the simulated 
-series in the full model
+series in the Lagos-Wright model.
 
 """
 function eqn_LWfit(x::Vector{Float64}, irflag::Int64, flag::Int64)
@@ -328,7 +328,7 @@ end
 eqn_noconnfit
 
 Matching the time series of CIC_GDP ratio in the data with the simulated 
-series in the full model
+series in the NCF model.
 
 """
 function eqn_noconnfit(x, irflag::Int64, flag::Int64)
@@ -373,7 +373,7 @@ end
 """
 vs(irflag,flag,model)
 
-Returns vθ and vρ for a specified model
+Returns simulated θ and simulated ρ for a specified model
 
 """
 function vs(irflag::Int64, flag::Int64, model::Int64)
@@ -574,7 +574,7 @@ end
 """
 figsub5(irflag,flag,model)
 
-Creates the subplots for figure 5 for a specific interest rate specification and country
+Creates the subplots for figure 5 for a given interest rate specification, model, and country.
 
 """
 function figsub5(irflag::Int64 , flag::Int64, model::Int64)
@@ -611,7 +611,7 @@ end
 """
 fig5(flag)
 
-Creates figure 5 for a specific country
+Creates figure 5 for a specific country.
 
 """
 function fig5(flag::Int64)
@@ -625,7 +625,7 @@ end
 """
 figsubA2(irflag,flag,model)
 
-Creates the subplots for figure 5 for a specific interest rate specification and country
+Creates the subplots for figure A2 for a given interest rate specification, model, and country
 
 """
 function figsubA2(irflag::Int64 , flag::Int64, model::Int64)
@@ -666,7 +666,7 @@ end
 """
 figA2(flag)
 
-Creates figure 5 for a specific country
+Creates figure A2 for a specific country.
 
 """
 function figA2(flag::Int64)
@@ -700,12 +700,12 @@ function figsubA3(flag::Int64)
 end
 
 """
-figA3(x)
+figA3()
 
-Creates figure A3
+Creates figure A3 (all countries)
 
 """
-function figA3(x)
+function figA3()
  p1= figsubA3(2)
  p3= figsubA3(0)
  p2= figsubA3(3)
@@ -718,7 +718,7 @@ end
 """
 figsubD2(irflag,flag,model)
 
-Creates subplots of figure D2
+Creates subplots of figure D2 for a given country, interest rate specification and model
 
 """
 function figsubD2(irflag,flag,model)
@@ -754,12 +754,12 @@ function figsubD2(irflag,flag,model)
 end
 
 """
-figD2(x)
+figD2()
 
-Creates figure D2
+Replicates figure D2.
 
 """
-function figD2(x)
+function figD2()
     p1=figsubD2(1,2,1)
     p2=figsubD2(2,2,1)
     p3=figsubD2(3,2,1)
@@ -778,12 +778,12 @@ function figD2(x)
 end
 
 """
-figA4(x)
+figA4()
 
 Creates figure A4
 
 """
-function figA4(x)
+function figA4()
     atmcicmat= joinpath(@__DIR__,"data","atm_cic.mat")
     dict=matread(atmcicmat)
     can=dict["ca_atm"]
@@ -810,13 +810,13 @@ function figA4(x)
 end
 
 """
-figA5(x)
+figA5()
 
 Creates figure A5
 
 """
 
-function figA5(x)
+function figA5()
     atmcicmat= joinpath(@__DIR__,"data","atm_cic.mat")
     dict=matread(atmcicmat)
     cr=dict["cr"]
@@ -833,7 +833,7 @@ figD1(x)
 Creates figure D1
 
 """
-function figD1(x)
+function figD1()
     datair= joinpath(@__DIR__,"data","ir.mat")
     dictir=matread(datair)
     usa=dictir["ir_usa"]
@@ -1093,7 +1093,7 @@ end
 """
 Calibrate(irflag,flag,model)
 
-Gives the value for parameters given a interest rate source, a country, and a model
+Gives the value for parameters given a interest rate source, a country, and a model.
 
 """
 function Calibrate(irflag::Int64, flag::Int64, model::Int64)
@@ -1316,12 +1316,12 @@ function Calibrate(irflag::Int64, flag::Int64, model::Int64)
 end
 
 """
-Table1(x)
+Table1()
 
 Store all results from Table 1 in a DataFrame
 
 """
-function Table1(x)
+function Table1()
   df=DataFrame()
   df.Country=["Canada","Canada","Canada","US","US","US","Australia","Australia","Australia","UK","UK","UK"]
   df.Model=["Standard", "NCF", "Full","Standard", "NCF", "Full","Standard", "NCF", "Full","Standard", "NCF", "Full"]
@@ -1365,7 +1365,7 @@ Table2(x)
 Store all results from Table 1 in a DataFrame
 
 """
-function Table2(x)
+function Table2()
   df=DataFrame()
   df.Country=["Canada","Canada","Canada","US","US","US","Australia","Australia","Australia","UK","UK","UK"]
   df.IR_S=["Baseline", "EI-DLM", "EI-TS","Baseline", "EI-DLM", "EI-TS","Baseline", "EI-DLM", "EI-TS","Baseline", "EI-DLM", "EI-TS"]
