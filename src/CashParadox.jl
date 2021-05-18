@@ -6,9 +6,11 @@ using Plots
 using Roots
 using Optim
 using DataFrames
+
 include("atm_cic.mat")
 include("data.mat")
 include("ir.mat")
+
 """
    load_data(irflag,flag)
 
