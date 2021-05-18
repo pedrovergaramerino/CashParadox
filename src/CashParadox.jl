@@ -7,10 +7,6 @@ using Roots
 using Optim
 using DataFrames
 
-include("atm_cic.mat")
-include("data.mat")
-include("ir.mat")
-
 """
    load_data(irflag,flag)
 
@@ -25,8 +21,8 @@ mutable struct load_data
     ddata::Vector{Float64}
 
 function load_data(irflag::Int64,flag::Int64)
-    dict=matread("data.mat")
-    dictir=matread("ir.mat")
+    dict=matread(joinpath("data.mat"))
+    dictir=matread(joinpath("ir.mat"))
     can=dict["can"]
     uk=dict["uk"]
     usa=dict["usa"]
@@ -786,7 +782,7 @@ Creates figure A4
 
 """
 function figA4(x)
-    dict=matread("JiangShaoCodeData//atm_cic.mat")
+    dict=matread(joinpath("atm_cic.mat"))
     can=dict["ca_atm"]
     uk=dict["uk_atm"]
     usa=dict["us_atm"]
@@ -818,7 +814,7 @@ Creates figure A5
 """
 
 function figA5(x)
-    dict=matread("atm_cic.mat")
+    dict=matread(joinpath("atm_cic.mat"))
     cr=dict["cr"]
     yr=cr[:,1]
     crc=cr[:,2]
@@ -834,7 +830,7 @@ Creates figure D1
 
 """
 function figD1(x)
-    dictir=matread("JiangShaoCodeData//ir.mat")
+    dictir=matread(joinpath("ir.mat"))
     usa=dictir["ir_usa"]
     yearusa=usa[:,1]
     ir1usa=usa[:,2]
