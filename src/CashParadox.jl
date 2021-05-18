@@ -834,7 +834,7 @@ Creates figure D1
 
 """
 function figD1(x)
-    datair= joinpath(@__DIR__,"..","data","ir.mat")
+    datair= joinpath(@__DIR__,"data","ir.mat")
     dictir=matread(datair)
     usa=dictir["ir_usa"]
     yearusa=usa[:,1]
