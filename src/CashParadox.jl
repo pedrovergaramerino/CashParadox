@@ -1,5 +1,4 @@
 module CashParadox
-export load_data
 using MAT
 using Statistics
 using LinRegOutliers
@@ -1356,5 +1355,24 @@ function Table1(x)
     return df
 end
 
+export  load_data,
+        Calibrate,
+        Table1,
+        eqn_LWfit,
+        eqn_Regime201610,
+        eqn_noconnfit,
+        eqn_tfit,
+        fig5,
+        figA2,
+        figA3,
+        figA4,
+        figD1,
+        figD4,
+        figsub5,
+        figsubA2,
+        figsubA3,
+        figsubD2,
+        vs,
+        vδ
 
 end #module
