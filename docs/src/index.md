@@ -57,6 +57,6 @@ Modules = [CashParadox]
 **Replication of CIC/GDP with different interest rate specifications: Figure D2**
 ![figD2](./assets/figD2.png)
 
-**ADD TABLE 1 AND 2**
-
+**Replication of Table G.1: Calibration results: unregistered activities**
+![figG1
 end
