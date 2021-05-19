@@ -58,5 +58,10 @@ Modules = [CashParadox]
 ![figD2](./assets/figD2.png)
 
 **Replication of Table G.1: Calibration results: unregistered activities**
-![figG1
+![figG1](./assets/t1.png)
+
+**Replication of Table D.1: Parameter values and Table D.2: Model performance comparison**
+![figD1D2](./assets/t1-2.png)
+
+
 end
