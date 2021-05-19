@@ -61,7 +61,7 @@ Modules = [CashParadox]
 ![figG1](./assets/t1.png)
 
 **Replication of Table D.1: Parameter values and Table D.2: Model performance comparison**
-![figD1D2](./assets/t1-2.png)
+![figD1D2](./assets/t2.png)
 
 
 end
