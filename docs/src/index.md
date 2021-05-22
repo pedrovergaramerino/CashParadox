@@ -17,7 +17,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> Fig5(2)
+julia> fig5(2)
 ```
 
 ![fig5aus](./assets/fig5aus.png)
@@ -53,7 +53,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> Fig5(1)
+julia> fig5(1)
 ```
 ![fig5us](./assets/fig5us.png)
 
@@ -68,7 +68,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> FigA2(2)
+julia> figA2(2)
 ```
 
 ![figA2aus](./assets/figA2aus.png)
@@ -80,7 +80,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> FigA2(0)
+julia> figA2(0)
 ```
 
 ![figA2can](./assets/figA2can.png)
@@ -92,7 +92,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> FigA2(3)
+julia> figA2(3)
 ```
 ![figA2uk](./assets/figA2uk.png)
 
@@ -103,7 +103,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> FigA2(1)
+julia> figA2(1)
 ```
 
 ![figA2us](./assets/figA2us.png)
@@ -117,7 +117,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> FigA3()
+julia> figA3()
 ```
 
 ![figA3](./assets/figA3.png)
@@ -129,7 +129,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> FigA4()
+julia> figA4()
 ```
 
 ![figA4](./assets/figA4.png)
@@ -142,7 +142,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> FigA5()
+julia> figA5()
 ```
 
 ![figA5](./assets/figA5.png)
@@ -155,7 +155,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> FigD1()
+julia> figD1()
 ```
 
 ![figD1](./assets/figD1.png)
@@ -167,7 +167,7 @@ In order to create this figure, type
 ```julia
 julia> using Cash Paradox
 
-julia> FigD2()
+julia> figD2()
 ```
 ![figD2](./assets/figD2.png)
 
